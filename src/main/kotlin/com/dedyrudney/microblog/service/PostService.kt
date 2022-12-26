@@ -6,29 +6,31 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class PostService @Autowired private constructor(val postRepository: PostRepository){
-    fun getPosts(): List<Post> = postRepository.findAll()
+class PostService @Autowired constructor(private var postRepository: PostRepository) {
 
-    fun getOne(id: Long): Post = postRepository
-        .findById(id)
-        .orElseThrow{
-            IllegalArgumentException("Post with this $id was not found")
-        }
-
-    fun savePost(post: Post): Post = postRepository.save(post)
-
-    fun updatePost(id: Long, postInput: Post): Post {
-        val postFound = getOne(id)
-
-        postFound.content = postInput.content
-        postFound.userId = postInput.userId
-        return postRepository.save(postFound)
+    fun getPosts(): List<Post> {
+        return postRepository.findAll()
     }
 
-    fun deletePost(id: Long): String{
-        val postFound = getOne(id)
+    fun getPostByUserId(userId:Long):List<Post> = postRepository.findAllByUserId(userId)
 
-        postRepository.delete(postFound)
-        return "Post deleted"
+    fun getOne(id: Long): Post =
+        postRepository.findById(id).orElseThrow { IllegalArgumentException("Post with id = $id was not found")}
+
+    fun savePost(post: Post): Post{
+        return  postRepository.save(post)
     }
+
+    fun updatePost(id: Long ,postInput: Post): Post{
+        val postToUpdate = getOne(id)
+        postToUpdate.content = postInput.content
+        return postRepository.save(postToUpdate)
+    }
+    fun deletePost(id:Long): String{
+        val postToDelete = getOne(id)
+
+        postRepository.delete(postToDelete)
+        return "post deleted"
+    }
+
 }

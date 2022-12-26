@@ -1,5 +1,6 @@
 package com.dedyrudney.microblog.service
 
+import com.dedyrudney.microblog.dto.UserConnexion
 import com.dedyrudney.microblog.entity.User
 import com.dedyrudney.microblog.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -36,5 +37,13 @@ class UserService @Autowired private constructor(private var userRepository: Use
 
         userRepository.delete(userFound)
         return "User deleted"
+    }
+
+    fun login(userData: UserConnexion): User {
+        val user = userRepository.findByUsername(userData.username).orElseThrow{IllegalArgumentException("User not Found")}
+        if (user.password == userData.password && user.email == userData.email){
+            return user
+        }
+        throw IllegalArgumentException("username or password or email not correct")
     }
 }
