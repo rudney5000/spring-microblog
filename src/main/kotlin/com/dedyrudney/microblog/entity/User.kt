@@ -1,5 +1,6 @@
 package com.dedyrudney.microblog.entity
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.sql.Timestamp
@@ -26,7 +27,7 @@ data class User(
     var ville: String,
     var pays: String,
     var fullname: String,
-    @Transient
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @field:Size(min = 5, max = 10, message = "Invalid password! (5-10 characters)")
     var password: String,
     @OneToMany(cascade = [CascadeType.ALL], mappedBy = "user")
