@@ -5,45 +5,18 @@ import com.dedyrudney.microblog.entity.User
 import com.dedyrudney.microblog.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.Optional
 
-@Service
-class UserService @Autowired private constructor(private var userRepository: UserRepository){
-    fun getUsers(): List<User> = userRepository.findAll()
+interface UserService {
+    fun getAllUsers(): List<User>
 
-    fun getOne(id: Long): User = userRepository
-        .findById(id)
-        .orElseThrow{
-            IllegalArgumentException("User with this $id was not found")
-        }
+    fun getOneUser(id: Long): Optional<User>
 
-    fun saveUser(user: User): User = userRepository.save(user)
+    fun saveUser(user: User): User
 
-    fun updateUser(id: Long, userInput: User): User {
-        val userFound = getOne(id)
+    fun updateUser(id: Long, userInput: User): Optional<User>
 
-        userFound.username = userInput.username
-        userFound.fullname = userInput.fullname
-        userFound.pays = userInput.pays
-        userFound.profession = userInput.profession
-        userFound.ville = userInput.ville
-        userFound.posts = userInput.posts
-        userFound.password = userInput.password
+    fun deleteUser(id: Long)
 
-        return userRepository.save(userFound)
-    }
-
-    fun deleteUser(id: Long): String{
-        val userFound = getOne(id)
-
-        userRepository.delete(userFound)
-        return "User deleted"
-    }
-
-    fun login(userData: UserConnexion): User {
-        val user = userRepository.findByUsername(userData.username).orElseThrow{IllegalArgumentException("User not Found")}
-        if (user.password == userData.password && user.email == userData.email){
-            return user
-        }
-        throw IllegalArgumentException("username or password or email not correct")
-    }
+    fun login(userData: UserConnexion): User
 }

@@ -4,33 +4,20 @@ import com.dedyrudney.microblog.entity.Post
 import com.dedyrudney.microblog.repository.PostRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.Optional
 
-@Service
-class PostService @Autowired constructor(private var postRepository: PostRepository) {
+interface PostService {
 
-    fun getPosts(): List<Post> {
-        return postRepository.findAll()
-    }
+    fun getAllPosts(): List<Post>
 
-    fun getPostByUserId(userId:Long):List<Post> = postRepository.findAllByUserId(userId)
+    fun getPostByUserId(userId:Long):List<Post>
 
-    fun getOne(id: Long): Post =
-        postRepository.findById(id).orElseThrow { IllegalArgumentException("Post with id = $id was not found")}
+    fun getOnePost(id: Long): Optional<Post>
 
-    fun savePost(post: Post): Post{
-        return  postRepository.save(post)
-    }
+    fun savePost(post: Post): Post
 
-    fun updatePost(id: Long ,postInput: Post): Post{
-        val postToUpdate = getOne(id)
-        postToUpdate.content = postInput.content
-        return postRepository.save(postToUpdate)
-    }
-    fun deletePost(id:Long): String{
-        val postToDelete = getOne(id)
+    fun updatePost(id: Long ,postInput: Post): Optional<Post>
 
-        postRepository.delete(postToDelete)
-        return "post deleted"
-    }
+    fun deletePost(id:Long)
 
 }

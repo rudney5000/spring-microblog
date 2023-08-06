@@ -27,7 +27,6 @@ data class User(
     var ville: String,
     var pays: String,
     var fullname: String,
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @field:Size(min = 5, max = 10, message = "Invalid password! (5-10 characters)")
     var password: String,
     @OneToMany(cascade = [CascadeType.ALL], mappedBy = "user")
